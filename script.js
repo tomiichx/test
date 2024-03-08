@@ -23,7 +23,7 @@ $(document).on('click', '.clothing-menu-header-btn', function (e) {
 })
 
 QBClothing.ResetItemTexture = function (obj, category) {
-    var itemTexture = $(obj).closest('.clothing-menu-option').find('[data-type="texture"]');
+    var itemTexture = $(obj).parent().parent().find('[data-type="texture"]');
     var defaultTextureValue = clothingCategorys[category].defaultTexture;
     $(itemTexture).val(defaultTextureValue);
 
@@ -37,9 +37,9 @@ QBClothing.ResetItemTexture = function (obj, category) {
 $(document).on('click', '.clothing-menu-option-item-right', function (e) {
     e.preventDefault();
 
-    var clothingCategory = $(this).closest('.clothing-menu-option').data('type');
+    var clothingCategory = $(this).parent().parent().parent().data('type');
     var buttonType = $(this).data('type');
-    var inputElem = $(this).closest('.clothing-menu-option').find('input');
+    var inputElem = $(this).parent().find('input');
     var inputVal = $(inputElem).val();
     var newValue = parseFloat(inputVal) + 1;
 
@@ -67,7 +67,7 @@ $(document).on('click', '.clothing-menu-option-item-right', function (e) {
                 }
             } else {
                 if (buttonType == "item") {
-                    var buttonMax = $(this).closest('.clothing-menu-option').find('[data-headertype="item-header"]').data('maxItem');
+                    var buttonMax = $(this).closest('.clothing-menu-option-item').find('[data-headertype="item-header"]').data('maxItem');
                     if (clothingCategory == "accessory" && newValue == 13) {
                         $(inputElem).val(14);
                         $.post('https://flegma-butik/updateSkin', JSON.stringify({
@@ -87,7 +87,7 @@ $(document).on('click', '.clothing-menu-option-item-right', function (e) {
                     }
                     QBClothing.ResetItemTexture(this, clothingCategory);
                 } else {
-                    var buttonMax = $(this).closest('.clothing-menu-option').find('[data-headertype="texture-header"]').data('maxTexture');
+                    var buttonMax = $(this).closest('.clothing-menu-option-item').find('[data-headertype="texture-header"]').data('maxTexture');
                     if (newValue <= parseInt(buttonMax)) {
                         $(inputElem).val(newValue);
                         $.post('https://flegma-butik/updateSkin', JSON.stringify({
@@ -105,9 +105,9 @@ $(document).on('click', '.clothing-menu-option-item-right', function (e) {
 $(document).on('click', '.clothing-menu-option-item-left', function (e) {
     e.preventDefault();
 
-    var clothingCategory = $(this).closest('.clothing-menu-option').data('type');
+    var clothingCategory = $(this).parent().parent().data('type');
     var buttonType = $(this).data('type');
-    var inputElem = $(this).closest('.clothing-menu-option').find('input');
+    var inputElem = $(this).parent().find('input');
     var inputVal = $(inputElem).val();
     var newValue = parseFloat(inputVal) - 1;
 
@@ -170,9 +170,10 @@ $(document).on('click', '.clothing-menu-option-item-left', function (e) {
 });
 
 $(document).on('input', '.clothing-menu-option-item-slider', function (e) {
-    var clothingCategory = $(this).closest('.clothing-menu-option').data('type');
+
+    var clothingCategory = $(this).parent().parent().data('type');
     var buttonType = $(this).data('type');
-    var inputElem = $(this).closest('.clothing-menu-option').find('input');
+    var inputElem = $(this).parent().find('input');
     var inputVal = $(inputElem).val();
     var newValue = parseFloat(inputVal);
 
@@ -237,7 +238,8 @@ $(document).on('input', '.clothing-menu-option-item-slider', function (e) {
 var changingCat = null;
 
 function ChangeUp() {
-    var clothingCategory = $(changingCat).closest('.clothing-menu-option').data('type');
+    var clothingCategory = $(changingCat).parent().parent().data('type');
+    var buttonType = $(changingCat).data('type');
     var inputVal = parseFloat($(changingCat).val());
 
     if (clothingCategory == "accessory" && inputVal + 1 == 13) {
@@ -246,8 +248,10 @@ function ChangeUp() {
 }
 
 function ChangeDown() {
-    var clothingCategory = $(changingCat).closest('.clothing-menu-option').data('type');
+    var clothingCategory = $(changingCat).parent().parent().data('type');
+    var buttonType = $(changingCat).data('type');
     var inputVal = parseFloat($(changingCat).val());
+
 
     if (clothingCategory == "accessory" && inputVal - 1 == 13) {
         $(changingCat).val(12 + 1)
@@ -255,7 +259,7 @@ function ChangeDown() {
 }
 
 $(document).on('change', '.item-number', function () {
-    var clothingCategory = $(this).closest('.clothing-menu-option').data('type');
+    var clothingCategory = $(this).parent().parent().data('type');
     var buttonType = $(this).data('type');
     var inputVal = $(this).val();
 
@@ -471,7 +475,7 @@ QBClothing.Open = function (data) {
 $(document).on('click', '.clothing-menu-outfit-option-button', function (e) {
     e.preventDefault();
 
-    var oData = $(this).closest('.clothing-menu-option').data('outfitData');
+    var oData = $(this).parent().data('outfitData');
 
     $.post('https://flegma-butik/selectOutfit', JSON.stringify({
         outfitData: oData.outfitData,
@@ -482,7 +486,7 @@ $(document).on('click', '.clothing-menu-outfit-option-button', function (e) {
 $(document).on('click', '.clothing-menu-myOutfit-option-button', function (e) {
     e.preventDefault();
 
-    var outfitData = $(this).closest('.clothing-menu-option').data('myOutfitData');
+    var outfitData = $(this).parent().data('myOutfitData');
 
     $.post('https://flegma-butik/selectOutfit', JSON.stringify({
         outfitData: outfitData.skin,
@@ -494,7 +498,7 @@ $(document).on('click', '.clothing-menu-myOutfit-option-button', function (e) {
 $(document).on('click', '.clothing-menu-myOutfit-option-button-remove', function (e) {
     e.preventDefault();
 
-    var outfitData = $(this).closest('.clothing-menu-option').data('myOutfitData');
+    var outfitData = $(this).parent().data('myOutfitData');
 
     $.post('https://flegma-butik/removeOutfit', JSON.stringify({
         outfitData: outfitData.skin,
